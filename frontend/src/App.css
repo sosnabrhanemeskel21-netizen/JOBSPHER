@@ -1,0 +1,55 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.App {
+    min-height: 100vh;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
+}
+
+
+/* Global page wrapper */
+
+.page {
+    padding: 40px 20px;
+}
+
+
+/* Headings */
+
+h1,
+h2,
+h3 {
+    color: #111827;
+    margin-bottom: 12px;
+}
+
+
+/* Make cards consistent across pages */
+
+.card {
+    /* fallback if page-specific doesn't define it */
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 6px 18px rgba(34, 36, 38, 0.06);
+    padding: 20px;
+}
+
+
+/* responsive container helper */
+
+.page .container {
+    max-width: 1200px;
+    margin: 0 auto;
+}

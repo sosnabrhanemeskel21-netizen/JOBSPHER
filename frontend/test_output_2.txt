@@ -1,0 +1,281 @@
+
+> frontend@0.1.0 test
+> react-scripts test --watchAll=false
+
+FAIL src/test/unit/services/authService.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/authService.js:1:1)
+      at Object.<anonymous> (src/test/unit/services/authService.test.js:1:1)
+
+FAIL src/test/unit/context/AuthContext.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/authService.js:1:1)
+      at Object.<anonymous> (src/context/AuthContext.js:18:1)
+      at Object.<anonymous> (src/test/unit/context/AuthContext.test.js:2:1)
+
+FAIL src/test/unit/components/Navbar.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/authService.js:1:1)
+      at Object.<anonymous> (src/context/AuthContext.js:18:1)
+      at Object.<anonymous> (src/test/unit/components/Navbar.test.js:3:1)
+
+FAIL src/test/integration/pages/JobList.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/jobService.js:1:1)
+      at Object.<anonymous> (src/test/integration/pages/JobList.test.js:3:1)
+
+FAIL src/test/integration/pages/Login.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/authService.js:1:1)
+      at Object.<anonymous> (src/context/AuthContext.js:18:1)
+      at Object.<anonymous> (src/test/integration/pages/Login.test.js:3:1)
+
+FAIL src/App.test.js
+  ● Test suite failed to run
+
+    Jest encountered an unexpected token
+
+    Jest failed to parse a file. This happens e.g. when your code or its dependencies use non-standard JavaScript syntax, or when Jest is not configured to support such syntax.
+
+    Out of the box Jest supports Babel, which will be used to transform your files into valid JS based on your Babel configuration.
+
+    By default "node_modules" folder is ignored by transformers.
+
+    Here's what you can do:
+     • If you are trying to use ECMAScript Modules, see https://jestjs.io/docs/ecmascript-modules for how to enable it.
+     • If you are trying to use TypeScript, see https://jestjs.io/docs/getting-started#using-typescript
+     • To have some of your "node_modules" files transformed, you can specify a custom "transformIgnorePatterns" in your config.
+     • If you need a custom transformation specify a "transform" option in your config.
+     • If you simply want to mock your non-JS modules (e.g. binary assets) you can stub them out with the "moduleNameMapper" config option.
+
+    You'll find more details and examples of these config options in the docs:
+    https://jestjs.io/docs/configuration
+    For information about custom transformations, see:
+    https://jestjs.io/docs/code-transformation
+
+    Details:
+
+    C:\Users\getac\OneDrive\Desktop\josphere\josphere\frontend\node_modules\axios\index.js:1
+    ({"Object.<anonymous>":function(module,exports,require,__dirname,__filename,jest){import axios from './lib/axios.js';
+                                                                                      ^^^^^^
+
+    SyntaxError: Cannot use import statement outside a module
+
+    [0m [90m 14 |[39m [90m */[39m
+     [90m 15 |[39m
+    [31m[1m>[22m[39m[90m 16 |[39m [36mimport[39m axios [36mfrom[39m [32m'axios'[39m[33m;[39m
+     [90m    |[39m [31m[1m^[22m[39m
+     [90m 17 |[39m
+     [90m 18 |[39m [90m// API base URL - can be overridden via environment variable[39m
+     [90m 19 |[39m [36mconst[39m [33mAPI_BASE_URL[39m [33m=[39m process[33m.[39menv[33m.[39m[33mREACT_APP_API_URL[39m [33m||[39m [32m'http://localhost:8080/api'[39m[33m;[39m[0m
+
+      at Runtime.createScriptFromCode (node_modules/jest-runtime/build/index.js:1728:14)
+      at Object.<anonymous> (src/services/api.js:16:1)
+      at Object.<anonymous> (src/services/authService.js:1:1)
+      at Object.<anonymous> (src/context/AuthContext.js:18:1)
+      at Object.<anonymous> (src/App.js:22:1)
+      at Object.<anonymous> (src/App.test.js:2:1)
+
+PASS src/test/unit/components/LoadingSpinner.test.js
+PASS src/test/unit/components/ErrorMessage.test.js
+
+Test Suites: 6 failed, 2 passed, 8 total
+Tests:       7 passed, 7 total
+Snapshots:   0 total
+Time:        7.488 s
+Ran all test suites.

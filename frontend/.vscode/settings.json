@@ -1,0 +1,15 @@
+{
+  "editor.formatOnSave": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+  "javascript.validate.enable": false,
+  "typescript.validate.enable": false,
+  "files.associations": {
+    "*.js": "javascriptreact"
+  },
+  "eslint.validate": [
+    "javascript",
+    "javascriptreact"
+  ]
+}

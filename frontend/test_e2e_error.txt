@@ -1,0 +1,315 @@
+
+> frontend@0.1.0 test
+> react-scripts test src/test/e2e/System.test.js --watchAll=false
+
+  console.warn
+    ⚠️ React Router Future Flag Warning: React Router will begin wrapping state updates in `React.startTransition` in v7. You can use the `v7_startTransition` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_starttransition.
+
+    [0m [90m 54 |[39m         [90m// 2. Render App (Starts at / -> redirects to /jobs or /login?) [39m
+     [90m 55 |[39m         [90m// Usually App handles routing. We rely on App's internal Router.[39m
+    [31m[1m>[22m[39m[90m 56 |[39m         render([33m<[39m[33mApp[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 57 |[39m
+     [90m 58 |[39m         [90m// 3. Navigate to Login (if not already there, but Navbar is present)[39m
+     [90m 59 |[39m         [90m// Clicking Login on Navbar[39m[0m
+
+      at warnOnce (node_modules/react-router/lib/deprecations.ts:9:13)
+      at logDeprecation (node_modules/react-router/lib/deprecations.ts:14:3)
+      at Object.logV6DeprecationWarnings [as UNSAFE_logV6DeprecationWarnings] (node_modules/react-router/lib/deprecations.ts:26:5)
+      at node_modules/react-router-dom/index.tsx:816:25
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (src/test/e2e/System.test.js:56:15)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
+
+  console.warn
+    ⚠️ React Router Future Flag Warning: Relative route resolution within Splat routes is changing in v7. You can use the `v7_relativeSplatPath` future flag to opt-in early. For more information, see https://reactrouter.com/v6/upgrading/future#v7_relativesplatpath.
+
+    [0m [90m 54 |[39m         [90m// 2. Render App (Starts at / -> redirects to /jobs or /login?) [39m
+     [90m 55 |[39m         [90m// Usually App handles routing. We rely on App's internal Router.[39m
+    [31m[1m>[22m[39m[90m 56 |[39m         render([33m<[39m[33mApp[39m [33m/[39m[33m>[39m)[33m;[39m
+     [90m    |[39m               [31m[1m^[22m[39m
+     [90m 57 |[39m
+     [90m 58 |[39m         [90m// 3. Navigate to Login (if not already there, but Navbar is present)[39m
+     [90m 59 |[39m         [90m// Clicking Login on Navbar[39m[0m
+
+      at warnOnce (node_modules/react-router/lib/deprecations.ts:9:13)
+      at logDeprecation (node_modules/react-router/lib/deprecations.ts:14:3)
+      at Object.logV6DeprecationWarnings [as UNSAFE_logV6DeprecationWarnings] (node_modules/react-router/lib/deprecations.ts:37:5)
+      at node_modules/react-router-dom/index.tsx:816:25
+      at Object.react_stack_bottom_frame (node_modules/react-dom/cjs/react-dom-client.development.js:25989:20)
+      at runWithFiberInDEV (node_modules/react-dom/cjs/react-dom-client.development.js:874:13)
+      at commitHookEffectListMount (node_modules/react-dom/cjs/react-dom-client.development.js:13249:29)
+      at commitHookPassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:13336:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15484:13)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15718:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15476:11)
+      at recursivelyTraversePassiveMountEffects (node_modules/react-dom/cjs/react-dom-client.development.js:15439:11)
+      at commitPassiveMountOnFiber (node_modules/react-dom/cjs/react-dom-client.development.js:15519:11)
+      at flushPassiveEffects (node_modules/react-dom/cjs/react-dom-client.development.js:18432:9)
+      at node_modules/react-dom/cjs/react-dom-client.development.js:17923:15
+      at flushActQueue (node_modules/react/cjs/react.development.js:590:34)
+      at Object.<anonymous>.process.env.NODE_ENV.exports.act (node_modules/react/cjs/react.development.js:884:10)
+      at node_modules/@testing-library/react/dist/act-compat.js:46:25
+      at renderRoot (node_modules/@testing-library/react/dist/pure.js:189:26)
+      at render (node_modules/@testing-library/react/dist/pure.js:291:10)
+      at Object.<anonymous> (src/test/e2e/System.test.js:56:15)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
+
+FAIL src/test/e2e/System.test.js
+  System E2E: User Journey
+    × User logs in, views jobs, filters, and logs out (1409 ms)
+
+  ● System E2E: User Journey › User logs in, views jobs, filters, and logs out
+
+    Unable to find an element with the text: /Welcome, System/i. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+    Ignored nodes: comments, script, style
+    [36m<body>[39m
+      [36m<div>[39m
+        [36m<div[39m
+          [33mclass[39m=[32m"App"[39m
+        [36m>[39m
+          [36m<div>[39m
+            [36m<nav[39m
+              [33mclass[39m=[32m"navbar"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"navbar-container"[39m
+              [36m>[39m
+                [36m<a[39m
+                  [33mclass[39m=[32m"navbar-logo"[39m
+                  [33mhref[39m=[32m"/jobs"[39m
+                [36m>[39m
+                  [0mJobspher[0m
+                [36m</a>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"navbar-menu"[39m
+                [36m>[39m
+                  [36m<a[39m
+                    [33mhref[39m=[32m"/jobs"[39m
+                  [36m>[39m
+                    [0mBrowse Jobs[0m
+                  [36m</a>[39m
+                  [36m<a[39m
+                    [33mhref[39m=[32m"/my-applications"[39m
+                  [36m>[39m
+                    [0mMy Applications[0m
+                  [36m</a>[39m
+                  [36m<span[39m
+                    [33mclass[39m=[32m"navbar-user"[39m
+                  [36m>[39m
+                    [0mSystem[0m
+                    [0m [0m
+                    [0mTester[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33mclass[39m=[32m"btn-logout"[39m
+                  [36m>[39m
+                    [0mLogout[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</nav>[39m
+            [36m<div[39m
+              [33mclass[39m=[32m"job-list-container"[39m
+            [36m>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"filters-section"[39m
+              [36m>[39m
+                [36m<h2>[39m
+                  [0mFind Your Dream Job[0m
+                [36m</h2>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"filters"[39m
+                [36m>[39m
+                  [36m<input[39m
+                    [33mname[39m=[32m"keyword"[39m
+                    [33mplaceholder[39m=[32m"Search jobs..."[39m
+                    [33mtype[39m=[32m"text"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<input[39m
+                    [33mname[39m=[32m"location"[39m
+                    [33mplaceholder[39m=[32m"Location"[39m
+                    [33mtype[39m=[32m"text"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<input[39m
+                    [33mname[39m=[32m"category"[39m
+                    [33mplaceholder[39m=[32m"Category"[39m
+                    [33mtype[39m=[32m"text"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<input[39m
+                    [33mname[39m=[32m"minSalary"[39m
+                    [33mplaceholder[39m=[32m"Min Salary"[39m
+                    [33mtype[39m=[32m"number"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                  [36m<input[39m
+                    [33mname[39m=[32m"maxSalary"[39m
+                    [33mplaceholder[39m=[32m"Max Salary"[39m
+                    [33mtype[39m=[32m"number"[39m
+                    [33mvalue[39m=[32m""[39m
+                  [36m/>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+              [36m<div[39m
+                [33mclass[39m=[32m"jobs-section"[39m
+              [36m>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"job-card"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"job-card-header"[39m
+                  [36m>[39m
+                    [36m<h3>[39m
+                      [0mFrontend Developer[0m
+                    [36m</h3>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"status-badge status-active"[39m
+                    [36m>[39m
+                      [0mActive[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"company-name"[39m
+                  [36m>[39m
+                    [0mTech Co[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-location"[39m
+                  [36m>[39m
+                    [0mRemote[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-category"[39m
+                  [36m/>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-description"[39m
+                  [36m>[39m
+                    [0m...[0m
+                  [36m</p>[39m
+                  [36m<a[39m
+                    [33mclass[39m=[32m"btn-view-job"[39m
+                    [33mhref[39m=[32m"/jobs/1"[39m
+                  [36m>[39m
+                    [0mView Details[0m
+                  [36m</a>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"job-card"[39m
+                [36m>[39m
+                  [36m<div[39m
+                    [33mclass[39m=[32m"job-card-header"[39m
+                  [36m>[39m
+                    [36m<h3>[39m
+                      [0mBackend Engineer[0m
+                    [36m</h3>[39m
+                    [36m<span[39m
+                      [33mclass[39m=[32m"status-badge status-active"[39m
+                    [36m>[39m
+                      [0mActive[0m
+                    [36m</span>[39m
+                  [36m</div>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"company-name"[39m
+                  [36m>[39m
+                    [0mData Inc[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-location"[39m
+                  [36m>[39m
+                    [0mNew York[0m
+                  [36m</p>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-category"[39m
+                  [36m/>[39m
+                  [36m<p[39m
+                    [33mclass[39m=[32m"job-description"[39m
+                  [36m>[39m
+                    [0m...[0m
+                  [36m</p>[39m
+                  [36m<a[39m
+                    [33mclass[39m=[32m"btn-view-job"[39m
+                    [33mhref[39m=[32m"/jobs/2"[39m
+                  [36m>[39m
+                    [0mView Details[0m
+                  [36m</a>[39m
+                [36m</div>[39m
+                [36m<div[39m
+                  [33mclass[39m=[32m"pagination"[39m
+                [36m>[39m
+                  [36m<button[39m
+                    [33mdisabled[39m=[32m""[39m
+                  [36m>[39m
+                    [0mPrevious[0m
+                  [36m</button>[39m
+                  [36m<span>[39m
+                    [0mPage [0m
+                    [0m1[0m
+                    [0m of [0m
+                    [0m1[0m
+                  [36m</span>[39m
+                  [36m<button[39m
+                    [33mdisabled[39m=[32m""[39m
+                  [36m>[39m
+                    [0mNext[0m
+                  [36m</button>[39m
+                [36m</div>[39m
+              [36m</div>[39m
+            [36m</div>[39m
+          [36m</div>[39m
+        [36m</div>[39m
+      [36m</div>[39m
+    [36m</body>[39m
+
+    [0m [90m 80 |[39m
+     [90m 81 |[39m         [90m// 5. Verify Redirect to Job List and Greeting[39m
+    [31m[1m>[22m[39m[90m 82 |[39m         [36mawait[39m waitFor(() [33m=>[39m {
+     [90m    |[39m                      [31m[1m^[22m[39m
+     [90m 83 |[39m             expect(screen[33m.[39mgetByText([35m/Welcome, System/i[39m))[33m.[39mtoBeInTheDocument()[33m;[39m
+     [90m 84 |[39m         })[33m;[39m
+     [90m 85 |[39m[0m
+
+      at waitForWrapper (node_modules/@testing-library/dom/dist/wait-for.js:163:27)
+      at Object.<anonymous> (src/test/e2e/System.test.js:82:22)
+      at TestScheduler.scheduleTests (node_modules/@jest/core/build/TestScheduler.js:333:13)
+      at runJest (node_modules/@jest/core/build/runJest.js:404:19)
+      at _run10000 (node_modules/@jest/core/build/cli/index.js:320:7)
+      at runCLI (node_modules/@jest/core/build/cli/index.js:173:3)
+
+Test Suites: 1 failed, 1 total
+Tests:       1 failed, 1 total
+Snapshots:   0 total
+Time:        5.011 s
+Ran all test suites matching /src\\test\\e2e\\System.test.js/i.
