@@ -1,0 +1,161 @@
+/* General */
+body, html {
+  margin: 0;
+  padding: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+
+/* Navbar */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.logo {
+  margin: 0;
+  color: #4f46e5;
+}
+
+.navbar-right .nav-link {
+  margin-left: 20px;
+  text-decoration: none;
+  color: #0d0d15;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navbar-right .nav-link:hover {
+  color: #2e2c30;
+}
+
+.navbar-right .signup-btn {
+  background-color: #ff6b6b;
+  color: white !important;
+  padding: 8px 20px;
+  border-radius: 6px;
+}
+
+.navbar-right .signup-btn:hover {
+  background-color: #ff3b3b;
+}
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #4f46e5, #6d28d9);
+  color: white;
+  padding: 120px 20px 80px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  margin-bottom: 40px;
+}
+
+.cta-button {
+  background-color: #ff6b6b;
+  color: white;
+  padding: 12px 30px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.cta-button:hover {
+  background-color: #ff3b3b;
+}
+
+/* Features */
+.features {
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.feature-card {
+  background-color: #f7f7f7;
+  padding: 30px;
+  border-radius: 10px;
+  width: 250px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+/* CTA Section */
+.cta {
+  background-color: #f0f0f0;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+/* Footer */
+.footer {
+  background-color: #1f2937;
+  color: white;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.footer-links a {
+  color: #d1d5db;
+  margin: 0 10px;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2rem;
+  }
+
+  .hero p {
+    font-size: 1rem;
+  }
+
+  .features-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 80%;
+  }
+
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .navbar-right {
+    margin-top: 10px;
+  }
+}

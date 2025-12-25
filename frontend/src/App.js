@@ -27,6 +27,7 @@ import JobList from './pages/JobList';
 import JobDetails from './pages/JobDetails';
 import EmployerDashboard from './pages/EmployerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import LandingPage from './LandingPage';
 import JobSeekerApplications from './pages/JobSeekerApplications';
 import './App.css';
 
@@ -46,6 +47,7 @@ const AppRoutes = () => {
 
   return (
     <Routes>
+      <Route path="/" element={<LandingPage />} />
       {/* Public Routes - Redirect to home if already authenticated */}
       <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
       <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />

@@ -498,3 +498,53 @@ REACT_APP_API_URL=http://localhost:8080/api
 
 **Note:** This project is for educational/demonstration purposes. For production use, ensure all security best practices are implemented and thoroughly tested.
 
+
+
+josphere/
+├── jobSpher/ (Backend - Spring Boot)
+│   ├── src/
+│   │   ├── main/
+│   │   │   ├── java/com/jobSpher/jobSpher/
+│   │   │   │   ├── config/
+│   │   │   │   ├── controller/
+│   │   │   │   ├── dto/
+│   │   │   │   ├── exception/
+│   │   │   │   ├── model/
+│   │   │   │   ├── repository/
+│   │   │   │   ├── security/
+│   │   │   │   ├── service/
+│   │   │   │   └── util/
+│   │   │   └── resources/
+│   │   │       ├── db/
+│   │   │       ├── static/
+│   │   │       ├── templates/
+│   │   │       └── application.properties
+│   │   └── test/
+│   ├── target/
+│   ├── uploads/
+│   ├── pom.xml
+│   ├── mvnw
+│   └── Dockerfile
+│
+└── frontend/ (Frontend - React)
+    ├── public/
+    ├── src/
+    │   ├── components/
+    │   │   ├── ErrorMessage.js
+    │   │   ├── LoadingSpinner.js
+    │   │   ├── Navbar.js
+    │   │   ├── PrivateRoute.js
+    │   │   └── StatusBadge.js
+    │   ├── pages/
+    │   │   ├── AdminDashboard.js
+    │   │   ├── EmployerDashboard.js
+    │   │   ├── JobDetails.js
+    │   │   ├── JobList.js
+    │   │   ├── JobSeekerApplications.js
+    │   │   ├── Login.js
+    │   │   └── Register.js
+    │   ├── services/
+    │   ├── App.js
+    │   └── index.js
+    ├── package.json
+    └── Dockerfile
