@@ -17,40 +17,35 @@ import com.jobSpher.jobSpher.model.Job;
 @Repository
 public interface JobRepository extends JpaRepository<Job, Long> {
     List<Job> findByCompany(Company company);
-    
-    @EntityGraph(attributePaths = {"company", "approvedBy"})
+
+    @EntityGraph(attributePaths = { "company", "approvedBy" })
     Page<Job> findByStatus(Job.JobStatus status, Pageable pageable);
-    
-    // Custom query to fetch pending jobs with all relationships including nested company.employer
+
+    // Custom query to fetch pending jobs with all relationships including nested
+    // company.employer
     @Query("SELECT DISTINCT j FROM Job j " +
-           "LEFT JOIN FETCH j.company c " +
-           "LEFT JOIN FETCH j.approvedBy " +
-           "LEFT JOIN FETCH c.employer " +
-           "WHERE j.status = :status")
+            "LEFT JOIN FETCH j.company c " +
+            "LEFT JOIN FETCH j.approvedBy " +
+            "LEFT JOIN FETCH c.employer " +
+            "WHERE j.status = :status")
     List<Job> findPendingJobsWithRelations(@Param("status") Job.JobStatus status);
-    
-    @EntityGraph(attributePaths = {"company", "approvedBy"})
+
+    @EntityGraph(attributePaths = { "company", "approvedBy" })
     @Override
     java.util.Optional<Job> findById(Long id);
-    
-    // Using JPQL with EntityGraph for proper pagination and relationship loading
-    // Note: Description search is case-sensitive to avoid PostgreSQL bytea casting issues
-    @EntityGraph(attributePaths = {"company", "approvedBy"})
-    @Query("SELECT DISTINCT j FROM Job j " +
-           "WHERE j.status = 'ACTIVE' " +
-           "AND (:keyword IS NULL OR LOWER(j.title) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
-           "OR (:keyword IS NOT NULL AND j.description IS NOT NULL AND j.description LIKE CONCAT('%', :keyword, '%'))) " +
-           "AND (:category IS NULL OR j.category = :category) " +
-           "AND (:location IS NULL OR LOWER(j.location) LIKE LOWER(CONCAT('%', :location, '%'))) " +
-           "AND (:minSalary IS NULL OR j.maxSalary >= :minSalary) " +
-           "AND (:maxSalary IS NULL OR j.minSalary <= :maxSalary)")
-    Page<Job> searchJobs(
-        @Param("keyword") String keyword,
-        @Param("category") String category,
-        @Param("location") String location,
-        @Param("minSalary") BigDecimal minSalary,
-        @Param("maxSalary") BigDecimal maxSalary,
-        Pageable pageable
-    );
-}
 
+    // Using JPQL with EntityGraph for proper pagination and relationship loading
+    // Note: Description search is case-sensitive to avoid PostgreSQL bytea casting
+    // issues
+    @EntityGraph(attributePaths = { "company", "approvedBy" })
+    @Query("SELECT j FROM Job j " +
+            "WHERE 1=1")
+    Page<Job> searchJobs(
+            @Param("status") Job.JobStatus status,
+            @Param("keyword") String keyword,
+            @Param("category") String category,
+            @Param("location") String location,
+            @Param("minSalary") BigDecimal minSalary,
+            @Param("maxSalary") BigDecimal maxSalary,
+            Pageable pageable);
+}
