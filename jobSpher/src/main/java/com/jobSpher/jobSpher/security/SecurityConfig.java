@@ -82,6 +82,8 @@ public class SecurityConfig {
                 // Public endpoints (no authentication required)
                 .requestMatchers("/api/auth/**").permitAll()
                 .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+                // Allow public access to job search and details endpoints
+                .requestMatchers("/api/jobs/**").permitAll()
                 .requestMatchers("/api/files/download/**").permitAll()
                 // Admin endpoints require ADMIN role
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
@@ -112,12 +114,14 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Allowed frontend origin (update for production)
-        configuration.setAllowedOrigins(List.of("http://localhost:3000"));
+        // Allow development origins (wildcard patterns allowed)
+        configuration.setAllowedOriginPatterns(List.of("*"));
         // Allowed HTTP methods
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         // Allow all headers
         configuration.setAllowedHeaders(List.of("*"));
+        // Expose Authorization header to client
+        configuration.setExposedHeaders(List.of("Authorization"));
         // Allow credentials (cookies, authorization headers)
         configuration.setAllowCredentials(true);
         
