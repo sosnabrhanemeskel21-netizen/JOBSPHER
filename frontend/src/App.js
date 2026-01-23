@@ -29,6 +29,8 @@ import EmployerDashboard from './pages/EmployerDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import LandingPage from './LandingPage';
 import JobSeekerApplications from './pages/JobSeekerApplications';
+import Notifications from './pages/Notifications';
+import Profile from './pages/Profile';
 import './App.css';
 
 /**
@@ -48,16 +50,16 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
-      {/* Public Routes - Redirect to home if already authenticated */}
-      <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
-      <Route path="/register" element={!user ? <Register /> : <Navigate to="/" />} />
-      
-      {/* Public Job Browsing Routes */}
-      <Route path="/jobs" element={<JobList />} />
-      <Route path="/jobs/:id" element={<JobDetails />} />
-      
+
+      {/* Public Routes - Redirect to jobs if already authenticated */}
+      <Route path="/login" element={!user ? <Login /> : <Navigate to="/jobs" />} />
+      <Route path="/register" element={!user ? <Register /> : <Navigate to="/jobs" />} />
+
+      {/* Protected Job Browsing Routes - Require login to view */}
+      <Route path="/jobs" element={<PrivateRoute><JobList /></PrivateRoute>} />
+      <Route path="/jobs/:id" element={<PrivateRoute><JobDetails /></PrivateRoute>} />
+
       {/* Protected Routes - Role-based access control */}
-      {/* Employer Dashboard - Only accessible to users with EMPLOYER role */}
       <Route
         path="/employer"
         element={
@@ -66,8 +68,7 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-      
-      {/* Admin Dashboard - Only accessible to users with ADMIN role */}
+
       <Route
         path="/admin"
         element={
@@ -76,8 +77,7 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-      
-      {/* Job Seeker Applications - Only accessible to users with JOB_SEEKER role */}
+
       <Route
         path="/my-applications"
         element={
@@ -86,9 +86,27 @@ const AppRoutes = () => {
           </PrivateRoute>
         }
       />
-      
-      {/* Default route - Redirect to jobs list */}
-      <Route path="/" element={<Navigate to="/jobs" />} />
+
+      <Route
+        path="/notifications"
+        element={
+          <PrivateRoute>
+            <Notifications />
+          </PrivateRoute>
+        }
+      />
+
+      <Route
+        path="/profile"
+        element={
+          <PrivateRoute>
+            <Profile />
+          </PrivateRoute>
+        }
+      />
+
+      {/* Catch-all - Redirect to landing */}
+      <Route path="*" element={<Navigate to="/" />} />
     </Routes>
   );
 };

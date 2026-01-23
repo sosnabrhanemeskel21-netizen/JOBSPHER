@@ -21,10 +21,8 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api
 // Create axios instance with default configuration
 const api = axios.create({
   baseURL: API_BASE_URL,
-  headers: {
-    'Content-Type': 'application/json',
-  },
 });
+
 
 /**
  * Request Interceptor
@@ -36,12 +34,12 @@ api.interceptors.request.use(
   (config) => {
     // Get JWT token from localStorage
     const token = localStorage.getItem('token');
-    
+
     // Add token to Authorization header if it exists
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    
+
     return config;
   },
   (error) => {
@@ -69,11 +67,11 @@ api.interceptors.response.use(
       // Clear authentication data
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      
+
       // Redirect to login page
       window.location.href = '/login';
     }
-    
+
     // Reject the promise with the error for component-level handling
     return Promise.reject(error);
   }

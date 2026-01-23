@@ -2,7 +2,17 @@ import api from './api';
 
 export const jobService = {
   getJobs: async (params = {}) => {
-    const response = await api.get('/jobs', { params });
+    const response = await api.get('/jobs', {
+      params: {
+        keyword: params.keyword || undefined,
+        category: params.category || undefined,
+        location: params.location || undefined,
+        minSalary: params.minSalary || undefined,
+        maxSalary: params.maxSalary || undefined,
+        page: params.page || 0,
+        size: params.size || 10
+      }
+    });
     return response.data;
   },
 
@@ -12,7 +22,13 @@ export const jobService = {
   },
 
   createJob: async (jobData) => {
-    const response = await api.post('/jobs', jobData);
+    const formData = new FormData();
+    Object.keys(jobData).forEach(key => {
+      if (jobData[key] !== null && jobData[key] !== undefined) {
+        formData.append(key, jobData[key]);
+      }
+    });
+    const response = await api.post('/jobs', formData);
     return response.data;
   },
 

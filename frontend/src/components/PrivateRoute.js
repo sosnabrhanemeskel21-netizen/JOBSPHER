@@ -20,20 +20,23 @@
  */
 
 import React from 'react';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import LoadingSpinner from './LoadingSpinner';
 
 const PrivateRoute = ({ children, allowedRoles = [] }) => {
   const { user, loading } = useAuth();
+  const location = useLocation();
 
   // Show loading state while checking authentication
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingSpinner message="Authenticating..." />;
   }
 
   // If user is not authenticated, redirect to login page
+  // Save the current location they were trying to access
   if (!user) {
-    return <Navigate to="/login" replace />;
+    return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   // If roles are specified and user doesn't have required role, redirect to home

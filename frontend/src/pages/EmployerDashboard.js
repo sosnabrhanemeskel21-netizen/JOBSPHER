@@ -1,34 +1,10 @@
-/**
- * EmployerDashboard Component
- * 
- * Main dashboard for employers to manage their company, payment verification,
- * job postings, and applications.
- * 
- * Features:
- * - Company profile creation/editing
- * - Payment proof upload (required before posting jobs)
- * - Job creation (only if payment is verified)
- * - Job listing with status
- * - Application management for each job
- * 
- * Workflow:
- * 1. Employer must create company profile
- * 2. Employer must upload payment proof
- * 3. Admin verifies payment
- * 4. Once verified, employer can post jobs
- * 5. Jobs require admin approval before becoming active
- * 6. Employers can manage applications for their jobs
- * 
- * @author JobSpher Team
- * @version 2.0
- */
-
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { companyService } from '../services/companyService';
 import { paymentService } from '../services/paymentService';
 import { jobService } from '../services/jobService';
 import { applicationService } from '../services/applicationService';
+import { fileService } from '../services/fileService';
 import Navbar from '../components/Navbar';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
@@ -43,13 +19,15 @@ const EmployerDashboard = () => {
   const [applications, setApplications] = useState({}); // jobId -> applications array
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  // Form states
+
+  // Form visibility
   const [showCompanyForm, setShowCompanyForm] = useState(false);
-  const [showPaymentForm, setShowPaymentForm] = useState(false);
   const [showJobForm, setShowJobForm] = useState(false);
-  const [selectedJobId, setSelectedJobId] = useState(null); // For viewing applications
-  
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+  const [showAppModal, setShowAppModal] = useState(false);
+  const [appStatusUpdate, setAppStatusUpdate] = useState({ status: '', notes: '' });
+
   // Company form data
   const [companyFormData, setCompanyFormData] = useState({
     name: '',
@@ -59,12 +37,7 @@ const EmployerDashboard = () => {
     address: '',
     phoneNumber: '',
   });
-  
-  // Payment form data
-  const [paymentFile, setPaymentFile] = useState(null);
-  const [referenceNumber, setReferenceNumber] = useState('');
-  const [uploadingPayment, setUploadingPayment] = useState(false);
-  
+
   // Job form data
   const [jobFormData, setJobFormData] = useState({
     title: '',
@@ -77,29 +50,32 @@ const EmployerDashboard = () => {
     requirements: '',
     responsibilities: '',
   });
+  const [logoFile, setLogoFile] = useState(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
   const [creatingJob, setCreatingJob] = useState(false);
+  const [jobPaymentFile, setJobPaymentFile] = useState(null);
 
+  // Candidate Pipeline State
+  const [allCandidates, setAllCandidates] = useState([]);
   useEffect(() => {
     loadData();
   }, []);
 
-  /**
-   * Load all dashboard data: company, payment status, jobs
-   */
   const loadData = async () => {
     setLoading(true);
     setError('');
     try {
-      const [companyData, paymentData, jobsData] = await Promise.all([
+      const [companyData, paymentData, jobsData, allAppsData] = await Promise.all([
         companyService.getMyCompany().catch(() => null),
         paymentService.getPaymentStatus().catch(() => null),
         jobService.getMyJobs().catch(() => []),
+        applicationService.getApplicationsForEmployer().catch(() => [])
       ]);
       setCompany(companyData);
       setPaymentStatus(paymentData);
       setJobs(jobsData);
-      
-      // If company exists, populate form for editing
+      setAllCandidates(allAppsData || []);
+
       if (companyData) {
         setCompanyFormData({
           name: companyData.name || '',
@@ -108,607 +84,502 @@ const EmployerDashboard = () => {
           website: companyData.website || '',
           address: companyData.address || '',
           phoneNumber: companyData.phoneNumber || '',
+          logoPath: companyData.logoPath || '',
         });
       }
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to load dashboard data');
-      console.error('Error loading data:', err);
+      setError('Failed to load dashboard data');
     } finally {
       setLoading(false);
     }
   };
 
-  /**
-   * Handle company profile creation/update
-   */
   const handleCompanySubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setUploadingLogo(true);
     try {
+      let logoPath = companyFormData.logoPath;
+
+      if (logoFile) {
+        const uploadResponse = await fileService.uploadFile(logoFile, 'logo');
+        logoPath = uploadResponse.filePath;
+      }
+
+      const submissionData = { ...companyFormData, logoPath };
       const data = company
-        ? await companyService.updateCompany(companyFormData)
-        : await companyService.createCompany(companyFormData);
+        ? await companyService.updateCompany(submissionData)
+        : await companyService.createCompany(submissionData);
+
       setCompany(data);
       setShowCompanyForm(false);
-      // Reload to get updated payment status
+      setLogoFile(null);
       await loadData();
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to save company information');
-    }
-  };
-
-  /**
-   * Handle payment proof upload
-   * Required before employer can post jobs
-   */
-  const handlePaymentSubmit = async (e) => {
-    e.preventDefault();
-    if (!paymentFile) {
-      setError('Please select a payment proof file');
-      return;
-    }
-    if (!referenceNumber.trim()) {
-      setError('Please enter a payment reference number');
-      return;
-    }
-    
-    setUploadingPayment(true);
-    setError('');
-    try {
-      await paymentService.uploadPayment(paymentFile, referenceNumber);
-      setShowPaymentForm(false);
-      setPaymentFile(null);
-      setReferenceNumber('');
-      await loadData();
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to upload payment proof');
+      setError('Failed to save company information');
     } finally {
-      setUploadingPayment(false);
+      setUploadingLogo(false);
     }
   };
 
-  /**
-   * Handle job creation
-   * Only allowed if payment is verified
-   */
+
   const handleJobSubmit = async (e) => {
     e.preventDefault();
-    if (!company?.paymentVerified) {
-      setError('Payment must be verified before posting jobs');
-      return;
-    }
-    
     setCreatingJob(true);
     setError('');
     try {
-      // Convert salary strings to numbers if provided
       const jobData = {
         ...jobFormData,
         minSalary: jobFormData.minSalary ? parseFloat(jobFormData.minSalary) : null,
         maxSalary: jobFormData.maxSalary ? parseFloat(jobFormData.maxSalary) : null,
+        paymentProof: jobPaymentFile
       };
-      
+
+      // Ensure we don't send NaN
+      if (isNaN(jobData.minSalary)) jobData.minSalary = null;
+      if (isNaN(jobData.maxSalary)) jobData.maxSalary = null;
+
       await jobService.createJob(jobData);
       setShowJobForm(false);
-      // Reset form
       setJobFormData({
-        title: '',
-        description: '',
-        category: '',
-        location: '',
-        employmentType: '',
-        minSalary: '',
-        maxSalary: '',
-        requirements: '',
-        responsibilities: '',
+        title: '', description: '', category: '', location: '',
+        employmentType: '', minSalary: '', maxSalary: '',
+        requirements: '', responsibilities: '',
       });
+      setJobPaymentFile(null);
       await loadData();
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create job');
+      console.error("Job creation error:", err);
+      setError(err.response?.data?.message || 'Failed to create job');
     } finally {
       setCreatingJob(false);
     }
   };
 
-  /**
-   * Load applications for a specific job
-   */
+
+
+  const handleQuickUpdate = async (app, newStatus) => {
+    try {
+      await applicationService.updateApplicationStatus(
+        app.id,
+        newStatus,
+        app.employerNotes || '' // Keep existing notes
+      );
+
+      // Refresh logic identical to handleAppUpdate to ensure UI sync
+      const allApps = await applicationService.getApplicationsForEmployer();
+      setAllCandidates(allApps);
+
+      if (selectedJobId) {
+        const updatedJobApps = await applicationService.getApplicationsByJob(selectedJobId);
+        setApplications(prev => ({ ...prev, [selectedJobId]: updatedJobApps }));
+      }
+
+      // If we are currently sorting/viewing the pipeline, this helps the UI feel responsive
+      // The state update above will eventually consistency the view
+    } catch (err) {
+      console.error("Quick update error:", err);
+      setError('Failed to update status');
+    }
+  };
+
+  const handleAppUpdate = async (e) => {
+    e.preventDefault();
+    try {
+      await applicationService.updateApplicationStatus(
+        selectedApplication.id,
+        appStatusUpdate.status,
+        appStatusUpdate.notes
+      );
+      setShowAppModal(false);
+
+      // 1. Always refresh the global pipeline list
+      const allApps = await applicationService.getApplicationsForEmployer();
+      setAllCandidates(allApps);
+
+      // 2. If a specific job view is currently open, refresh that too
+      if (selectedJobId) {
+        const updatedJobApps = await applicationService.getApplicationsByJob(selectedJobId);
+        setApplications(prev => ({ ...prev, [selectedJobId]: updatedJobApps }));
+      }
+
+    } catch (err) {
+      console.error("Update error:", err);
+      setError('Failed to update application status');
+    }
+  };
+
+  const openAppReview = (app) => {
+    setSelectedApplication(app);
+    setAppStatusUpdate({ status: app.status, notes: app.employerNotes || '' });
+    setShowAppModal(true);
+  };
+
   const loadApplications = async (jobId) => {
-    if (applications[jobId]) {
-      // Already loaded, just toggle view
-      setSelectedJobId(selectedJobId === jobId ? null : jobId);
+    if (selectedJobId === jobId) {
+      setSelectedJobId(null);
       return;
     }
-    
     try {
       const apps = await applicationService.getApplicationsByJob(jobId);
       setApplications({ ...applications, [jobId]: apps });
       setSelectedJobId(jobId);
     } catch (err) {
-      setError(err.response?.data?.error || 'Failed to load applications');
-    }
-  };
-
-  /**
-   * Update application status (shortlist, reject, hire)
-   */
-  const handleUpdateApplicationStatus = async (applicationId, status, notes = '') => {
-    try {
-      await applicationService.updateApplicationStatus(applicationId, status, notes);
-      // Reload applications for the selected job
-      if (selectedJobId) {
-        const apps = await applicationService.getApplicationsByJob(selectedJobId);
-        setApplications({ ...applications, [selectedJobId]: apps });
-      }
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to update application status');
+      setError('Failed to load applications');
     }
   };
 
   if (loading) {
     return (
-      <div>
+      <div className="employer-page">
         <Navbar />
-        <LoadingSpinner message="Loading dashboard..." />
+        <LoadingSpinner message="Opening your portal..." />
       </div>
     );
   }
 
   return (
-    <div>
+    <div className="employer-page">
       <Navbar />
-      <div className="employer-dashboard">
-        <h1>Employer Dashboard</h1>
-        
-        {error && <ErrorMessage message={error} dismissible onDismiss={() => setError('')} />}
 
-        {/* Company Profile Section */}
+      <div className="page-header-hazy">
+        <div className="container animate-fade">
+          <h1>Employer Hub</h1>
+          <p className="page-subtitle">Manage your company and find the right hands to help.</p>
+        </div>
+      </div>
+
+      <div className="container employer-layout">
+        {error && <div className="container"><ErrorMessage message={error} /></div>}
+
+        {/* Setup Flow */}
         {!company ? (
-          <div className="card">
-            <h2>Create Your Company Profile</h2>
-            <p className="info-text">You must create a company profile before you can post jobs.</p>
-            {!showCompanyForm ? (
-              <button onClick={() => setShowCompanyForm(true)} className="btn-primary">
-                Create Company Profile
-              </button>
-            ) : (
-              <form onSubmit={handleCompanySubmit}>
-                <div className="form-group">
-                  <label>Company Name *</label>
-                  <input
-                    type="text"
-                    value={companyFormData.name}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, name: e.target.value })}
-                    required
-                    placeholder="Enter company name"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Description</label>
-                  <textarea
-                    value={companyFormData.description}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, description: e.target.value })}
-                    rows={4}
-                    placeholder="Describe your company"
-                  />
-                </div>
-                <div className="form-row">
-                  <div className="form-group">
-                    <label>Industry</label>
-                    <input
-                      type="text"
-                      value={companyFormData.industry}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, industry: e.target.value })}
-                      placeholder="e.g., Technology, Healthcare"
-                    />
-                  </div>
-                  <div className="form-group">
-                    <label>Website</label>
-                    <input
-                      type="url"
-                      value={companyFormData.website}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, website: e.target.value })}
-                      placeholder="https://example.com"
-                    />
-                  </div>
-                </div>
-                <div className="form-group">
-                  <label>Address *</label>
-                  <input
-                    type="text"
-                    value={companyFormData.address}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, address: e.target.value })}
-                    required
-                    placeholder="Company address"
-                  />
-                </div>
-                <div className="form-group">
-                  <label>Phone Number</label>
-                  <input
-                    type="tel"
-                    value={companyFormData.phoneNumber}
-                    onChange={(e) => setCompanyFormData({ ...companyFormData, phoneNumber: e.target.value })}
-                    placeholder="+1234567890"
-                  />
-                </div>
-                <div className="form-actions">
-                  <button type="submit" className="btn-primary">Save Company</button>
-                  <button type="button" onClick={() => setShowCompanyForm(false)} className="btn-secondary">
-                    Cancel
-                  </button>
-                </div>
-              </form>
-            )}
-          </div>
+          <section className="setup-section animate-slide">
+            <div className="setup-grid">
+              <div className={`card setup-card active`}>
+                <div className="setup-number">1</div>
+                <h3>Organization Profile</h3>
+                <p>Register your company to start posting opportunities immediately.</p>
+                <button onClick={() => setShowCompanyForm(true)} className="btn btn-primary btn-sm">Create Profile</button>
+              </div>
+
+              <div className={`card setup-card disabled`}>
+                <div className="setup-number">2</div>
+                <h3>Start Posting</h3>
+                <p>Once registered, you can immediately connect with job seekers.</p>
+                <div className="status-indicator">Locked until step 1 complete</div>
+              </div>
+            </div>
+          </section>
         ) : (
-          <>
-            {/* Company Information Card */}
-            <div className="card">
-              <div className="card-header">
-                <h2>Company Information</h2>
-                <button onClick={() => setShowCompanyForm(true)} className="btn-secondary">
-                  Edit
-                </button>
+          <section className="setup-section animate-slide">
+            <div className="setup-grid">
+              <div className="card setup-card completed">
+                <div className="setup-number">✓</div>
+                <h3>Profile Ready</h3>
+                <p>Your organization is registered and active.</p>
+                {company.logoPath && (
+                  <div className="setup-logo-preview">
+                    <img src={fileService.getDownloadUrl(company.logoPath)} alt="Logo" />
+                  </div>
+                )}
               </div>
-              <div className="company-info">
-                <p><strong>Name:</strong> {company.name}</p>
-                {company.industry && <p><strong>Industry:</strong> {company.industry}</p>}
-                {company.website && <p><strong>Website:</strong> <a href={company.website} target="_blank" rel="noopener noreferrer">{company.website}</a></p>}
-                <p><strong>Payment Verified:</strong> 
-                  {company.paymentVerified ? (
-                    <span className="verified-badge">✓ Verified</span>
+            </div>
+          </section>
+        )}
+
+        <div className="dashboard-content animate-fade">
+          {/* Company Details */}
+          {company && (
+            <div className="card company-detail-card">
+              <div className="card-header-flex">
+                <div>
+                  <h2>{company.name}</h2>
+                  <p className="industry-text">{company.industry || 'Community Organization'}</p>
+                </div>
+                <div className="header-actions">
+                  <button onClick={() => setShowCompanyForm(true)} className="btn btn-outline btn-sm">Edit Profile</button>
+                </div>
+              </div>
+              <div className="company-stats">
+                <div className="stat-item">
+                  <label>Positions</label>
+                  <p>{jobs.length}</p>
+                </div>
+                <div className="stat-item">
+                  <label>Status</label>
+                  <p className="status-verified">Verified Partner</p>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Jobs List */}
+          {(
+            <div className="jobs-dashboard">
+              <div className="section-header-flex">
+                <h2>Active Opportunities</h2>
+                <button onClick={() => setShowJobForm(true)} className="btn btn-primary">+ New Posting</button>
+              </div>
+
+              {jobs.length === 0 ? (
+                <div className="card empty-card">
+                  <p>You haven't posted any opportunities yet.</p>
+                </div>
+              ) : (
+                <div className="job-cards-container">
+                  {jobs.map(job => (
+                    <div key={job.id} className="card dashboard-job-card">
+                      <div className="job-card-main">
+                        <div className="job-title-row">
+                          <h3>{job.title}</h3>
+                          <StatusBadge status={job.status} type="job" />
+                        </div>
+                        <p className="job-info-row">{job.location} • {job.category}</p>
+                        <div className="job-footer">
+                          <button onClick={() => loadApplications(job.id)} className="btn btn-outline btn-sm">
+                            {selectedJobId === job.id ? 'Hide Applications' : `View Applications`}
+                          </button>
+                          <Link to={`/jobs/${job.id}`} className="view-link">View Public Page →</Link>
+                        </div>
+                      </div>
+
+                      {selectedJobId === job.id && (
+                        <div className="applications-panel animate-slide">
+                          <h4>Applications for this role</h4>
+                          {applications[job.id]?.length === 0 ? (
+                            <p className="no-apps">No candidates have applied yet.</p>
+                          ) : (
+                            <div className="apps-list">
+                              {applications[job.id]?.map(app => (
+                                <div key={app.id} className="app-item-card">
+                                  <div className="app-info">
+                                    <p className="candidate-name">{app.jobSeeker?.firstName} {app.jobSeeker?.lastName}</p>
+                                    <p className="app-meta">{app.jobSeeker?.email} • Applied {new Date(app.appliedAt).toLocaleDateString()}</p>
+                                  </div>
+                                  <div className="app-actions">
+                                    <StatusBadge status={app.status} type="application" />
+                                    <div className="action-buttons-group" style={{ display: 'flex', gap: '0.5rem' }}>
+                                      <button onClick={() => openAppReview(app)} className="btn btn-outline btn-sm">Details</button>
+                                      {app.status !== 'SHORTLISTED' && (
+                                        <button onClick={() => handleQuickUpdate(app, 'SHORTLISTED')} className="btn btn-outline btn-sm">Shortlist</button>
+                                      )}
+                                      {app.status !== 'HIRED' && (
+                                        <button onClick={() => handleQuickUpdate(app, 'HIRED')} className="btn btn-primary btn-sm">Hire</button>
+                                      )}
+                                      {app.status !== 'REJECTED' && (
+                                        <button onClick={() => handleQuickUpdate(app, 'REJECTED')} className="btn btn-danger btn-sm" style={{ borderColor: 'rgba(239, 68, 68, 0.5)', color: '#fca5a5' }}>Reject</button>
+                                      )}
+                                    </div>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Candidates Pipeline Section */}
+              <div className="candidates-pipeline-section" style={{ marginTop: '4rem', paddingTop: '2rem', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+                <div className="section-header-flex">
+                  <h2>Talent Pipeline</h2>
+                </div>
+
+                <div className="card-list">
+                  {allCandidates.length === 0 ? (
+                    <div className="card empty-card"><p>No candidates found.</p></div>
                   ) : (
-                    <span className="not-verified-badge">✗ Not Verified</span>
+                    allCandidates.map(app => (
+                      <div key={app.id} className="card item-card-admin" style={{ marginBottom: '1rem', padding: '1.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <div className="item-info">
+                          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.3rem' }}>{app.jobSeeker?.firstName} {app.jobSeeker?.lastName}</h3>
+                          <p className="text-dim">{app.job?.title}</p>
+                        </div>
+                        <div className="item-actions" style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
+                          <StatusBadge status={app.status} type="application" />
+                          <div className="action-buttons-group" style={{ display: 'flex', gap: '0.5rem' }}>
+                            {app.status !== 'SHORTLISTED' && (
+                              <button onClick={() => handleQuickUpdate(app, 'SHORTLISTED')} className="btn btn-outline btn-sm">Shortlist</button>
+                            )}
+                            {app.status !== 'HIRED' && (
+                              <button onClick={() => handleQuickUpdate(app, 'HIRED')} className="btn btn-primary btn-sm">Hire</button>
+                            )}
+                            {app.status !== 'REJECTED' && (
+                              <button onClick={() => handleQuickUpdate(app, 'REJECTED')} className="btn btn-danger btn-sm" style={{ borderColor: 'rgba(239, 68, 68, 0.5)', color: '#fca5a5' }}>Reject</button>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))
                   )}
-                </p>
+                </div>
               </div>
-              
-              {showCompanyForm && (
-                <form onSubmit={handleCompanySubmit} className="edit-form">
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Forms Modals - Simplistic for now */}
+      {(showCompanyForm || showJobForm || showAppModal) && (
+        <div className="modal-overlay" onClick={() => {
+          setShowCompanyForm(false);
+          setShowJobForm(false);
+          setShowAppModal(false);
+        }}>
+          <div className="modal-card card animate-slide" onClick={e => e.stopPropagation()}>
+
+            {showCompanyForm && (
+              <>
+                <h2>Company Profile</h2>
+                <form onSubmit={handleCompanySubmit} className="hazy-form">
                   <div className="form-group">
-                    <label>Company Name *</label>
-                    <input
-                      type="text"
-                      value={companyFormData.name}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, name: e.target.value })}
-                      required
+                    <label htmlFor="companyLogoUpload">Company Logo</label>
+                    <input xmlns="http://www.w3.org/1999/xhtml"
+                      id="companyLogoUpload"
+                      type="file"
+                      accept="image/*"
+                      onChange={e => setLogoFile(e.target.files[0])}
+                      style={{ display: 'block', width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', cursor: 'pointer' }}
                     />
+                  </div>
+                  <div className="form-group">
+                    <label>Organization Name</label>
+                    <input type="text" value={companyFormData.name} onChange={e => setCompanyFormData({ ...companyFormData, name: e.target.value })} required />
                   </div>
                   <div className="form-group">
                     <label>Description</label>
-                    <textarea
-                      value={companyFormData.description}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, description: e.target.value })}
-                      rows={4}
-                    />
-                  </div>
-                  <div className="form-row">
-                    <div className="form-group">
-                      <label>Industry</label>
-                      <input
-                        type="text"
-                        value={companyFormData.industry}
-                        onChange={(e) => setCompanyFormData({ ...companyFormData, industry: e.target.value })}
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Website</label>
-                      <input
-                        type="url"
-                        value={companyFormData.website}
-                        onChange={(e) => setCompanyFormData({ ...companyFormData, website: e.target.value })}
-                      />
-                    </div>
+                    <textarea rows={3} value={companyFormData.description} onChange={e => setCompanyFormData({ ...companyFormData, description: e.target.value })} />
                   </div>
                   <div className="form-group">
-                    <label>Address *</label>
-                    <input
-                      type="text"
-                      value={companyFormData.address}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, address: e.target.value })}
-                      required
-                    />
+                    <label>Industry</label>
+                    <select value={companyFormData.industry} onChange={e => setCompanyFormData({ ...companyFormData, industry: e.target.value })}>
+                      <option value="">Select Industry</option>
+                      <option value="Technology">Technology</option>
+                      <option value="Healthcare">Healthcare</option>
+                      <option value="Education">Education</option>
+                      <option value="Finance">Finance</option>
+                      <option value="Retail">Retail</option>
+                      <option value="Other">Other</option>
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label>Website</label>
+                    <input type="url" value={companyFormData.website} onChange={e => setCompanyFormData({ ...companyFormData, website: e.target.value })} placeholder="https://..." />
+                  </div>
+                  <div className="form-group">
+                    <label>Address</label>
+                    <input type="text" value={companyFormData.address} onChange={e => setCompanyFormData({ ...companyFormData, address: e.target.value })} required />
                   </div>
                   <div className="form-group">
                     <label>Phone Number</label>
-                    <input
-                      type="tel"
-                      value={companyFormData.phoneNumber}
-                      onChange={(e) => setCompanyFormData({ ...companyFormData, phoneNumber: e.target.value })}
-                    />
+                    <input type="tel" value={companyFormData.phoneNumber} onChange={e => setCompanyFormData({ ...companyFormData, phoneNumber: e.target.value })} />
                   </div>
-                  <div className="form-actions">
-                    <button type="submit" className="btn-primary">Update</button>
-                    <button type="button" onClick={() => setShowCompanyForm(false)} className="btn-secondary">
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              )}
-            </div>
-
-            {/* Payment Verification Section */}
-            {!company.paymentVerified && (
-              <div className="card payment-card">
-                <h2>Payment Verification Required</h2>
-                <p className="info-text">
-                  You must upload payment proof and wait for admin verification before you can post jobs.
-                </p>
-                
-                {paymentStatus && (
-                  <div className="payment-status">
-                    <p><strong>Current Status:</strong> <StatusBadge status={paymentStatus.status} type="payment" /></p>
-                    {paymentStatus.adminNotes && (
-                      <p className="admin-notes"><strong>Admin Notes:</strong> {paymentStatus.adminNotes}</p>
-                    )}
-                    {paymentStatus.uploadDate && (
-                      <p><strong>Uploaded:</strong> {new Date(paymentStatus.uploadDate).toLocaleDateString()}</p>
-                    )}
-                  </div>
-                )}
-                
-                {showPaymentForm ? (
-                  <form onSubmit={handlePaymentSubmit}>
-                    <div className="form-group">
-                      <label>Payment Proof (Image or PDF) *</label>
-                      <input
-                        type="file"
-                        accept="image/*,.pdf"
-                        onChange={(e) => setPaymentFile(e.target.files[0])}
-                        required
-                      />
-                      <small>Accepted formats: JPG, PNG, PDF (Max 10MB)</small>
-                    </div>
-                    <div className="form-group">
-                      <label>Reference Number *</label>
-                      <input
-                        type="text"
-                        value={referenceNumber}
-                        onChange={(e) => setReferenceNumber(e.target.value)}
-                        required
-                        placeholder="Enter payment reference number"
-                      />
-                    </div>
-                    <div className="form-actions">
-                      <button type="submit" disabled={uploadingPayment} className="btn-primary">
-                        {uploadingPayment ? 'Uploading...' : 'Upload Payment Proof'}
-                      </button>
-                      <button type="button" onClick={() => setShowPaymentForm(false)} className="btn-secondary">
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                ) : (
-                  <button onClick={() => setShowPaymentForm(true)} className="btn-primary">
-                    {paymentStatus ? 'Upload New Payment Proof' : 'Upload Payment Proof'}
+                  <button type="submit" disabled={uploadingLogo} className="btn btn-primary auth-btn">
+                    {uploadingLogo ? 'Saving...' : 'Save Organization'}
                   </button>
-                )}
-              </div>
+                </form>
+              </>
             )}
 
-            {/* Job Management Section - Only if payment verified */}
-            {company.paymentVerified && (
-              <div className="card">
-                <div className="card-header">
-                  <h2>My Jobs ({jobs.length})</h2>
-                  <button onClick={() => setShowJobForm(true)} className="btn-primary">
-                    + Post New Job
+            {showJobForm && (
+              <>
+                <h2>Post New Opportunity</h2>
+                <form onSubmit={handleJobSubmit} className="hazy-form grid-form">
+                  <div className="form-group full-width">
+                    <label>Title</label>
+                    <input type="text" value={jobFormData.title} onChange={e => setJobFormData({ ...jobFormData, title: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Category</label>
+                    <input type="text" value={jobFormData.category} onChange={e => setJobFormData({ ...jobFormData, category: e.target.value })} required />
+                  </div>
+                  <div className="form-group">
+                    <label>Location</label>
+                    <input type="text" value={jobFormData.location} onChange={e => setJobFormData({ ...jobFormData, location: e.target.value })} required />
+                  </div>
+                  <div className="form-group full-width">
+                    <label>Description</label>
+                    <textarea rows={4} value={jobFormData.description} onChange={e => setJobFormData({ ...jobFormData, description: e.target.value })} required />
+                  </div>
+                  <div className="form-group full-width">
+                    <label>Requirements</label>
+                    <textarea rows={3} value={jobFormData.requirements} onChange={e => setJobFormData({ ...jobFormData, requirements: e.target.value })} placeholder="List key requirements..." />
+                  </div>
+                  <div className="form-group full-width">
+                    <label htmlFor="jobPaymentProof">Upload Payment Proof (Required)</label>
+                    <input
+                      id="jobPaymentProof"
+                      type="file"
+                      accept="image/*,.pdf"
+                      onChange={e => setJobPaymentFile(e.target.files[0])}
+                      required
+                      style={{ display: 'block', width: '100%', padding: '10px', background: 'rgba(255,255,255,0.1)', cursor: 'pointer', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px' }}
+                    />
+                    <small className="form-hint">Please upload receipt for this job posting.</small>
+                  </div>
+                  <button type="submit" disabled={creatingJob || !jobPaymentFile} className="btn btn-primary auth-btn full-width">
+                    {creatingJob ? 'Posting...' : 'Post Opportunity'}
                   </button>
+                </form>
+              </>
+            )}
+
+            {showAppModal && selectedApplication && (
+              <>
+                <h2>Review Application</h2>
+                <div className="app-details-view">
+                  <div className="detail-row">
+                    <label>Candidate</label>
+                    <p>{selectedApplication.jobSeeker?.firstName} {selectedApplication.jobSeeker?.lastName}</p>
+                  </div>
+                  <div className="detail-row">
+                    <label>Cover Letter</label>
+                    <p className="rich-text">{selectedApplication.coverLetter || 'No cover letter provided.'}</p>
+                  </div>
+                  <div className="detail-row">
+                    <label>Resume</label>
+                    <a href={fileService.getDownloadUrl(selectedApplication.resumePath)} target="_blank" rel="noreferrer" className="btn btn-outline btn-sm">
+                      Download Resume
+                    </a>
+                  </div>
                 </div>
 
-                {showJobForm && (
-                  <form onSubmit={handleJobSubmit} className="job-form">
-                    <h3>Create New Job Posting</h3>
-                    <div className="form-group">
-                      <label>Job Title *</label>
-                      <input
-                        type="text"
-                        value={jobFormData.title}
-                        onChange={(e) => setJobFormData({ ...jobFormData, title: e.target.value })}
-                        required
-                        placeholder="e.g., Senior Software Engineer"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Description *</label>
-                      <textarea
-                        value={jobFormData.description}
-                        onChange={(e) => setJobFormData({ ...jobFormData, description: e.target.value })}
-                        required
-                        rows={5}
-                        placeholder="Describe the job position"
-                      />
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Category *</label>
-                        <input
-                          type="text"
-                          value={jobFormData.category}
-                          onChange={(e) => setJobFormData({ ...jobFormData, category: e.target.value })}
-                          required
-                          placeholder="e.g., Technology, Healthcare"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Location *</label>
-                        <input
-                          type="text"
-                          value={jobFormData.location}
-                          onChange={(e) => setJobFormData({ ...jobFormData, location: e.target.value })}
-                          required
-                          placeholder="e.g., New York, NY"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-row">
-                      <div className="form-group">
-                        <label>Employment Type</label>
-                        <select
-                          value={jobFormData.employmentType}
-                          onChange={(e) => setJobFormData({ ...jobFormData, employmentType: e.target.value })}
-                        >
-                          <option value="">Select type</option>
-                          <option value="FULL_TIME">Full Time</option>
-                          <option value="PART_TIME">Part Time</option>
-                          <option value="CONTRACT">Contract</option>
-                          <option value="INTERNSHIP">Internship</option>
-                        </select>
-                      </div>
-                      <div className="form-group">
-                        <label>Min Salary</label>
-                        <input
-                          type="number"
-                          value={jobFormData.minSalary}
-                          onChange={(e) => setJobFormData({ ...jobFormData, minSalary: e.target.value })}
-                          placeholder="0"
-                        />
-                      </div>
-                      <div className="form-group">
-                        <label>Max Salary</label>
-                        <input
-                          type="number"
-                          value={jobFormData.maxSalary}
-                          onChange={(e) => setJobFormData({ ...jobFormData, maxSalary: e.target.value })}
-                          placeholder="0"
-                        />
-                      </div>
-                    </div>
-                    <div className="form-group">
-                      <label>Requirements</label>
-                      <textarea
-                        value={jobFormData.requirements}
-                        onChange={(e) => setJobFormData({ ...jobFormData, requirements: e.target.value })}
-                        rows={4}
-                        placeholder="List job requirements"
-                      />
-                    </div>
-                    <div className="form-group">
-                      <label>Responsibilities</label>
-                      <textarea
-                        value={jobFormData.responsibilities}
-                        onChange={(e) => setJobFormData({ ...jobFormData, responsibilities: e.target.value })}
-                        rows={4}
-                        placeholder="List job responsibilities"
-                      />
-                    </div>
-                    <div className="form-actions">
-                      <button type="submit" disabled={creatingJob} className="btn-primary">
-                        {creatingJob ? 'Creating...' : 'Create Job'}
-                      </button>
-                      <button type="button" onClick={() => setShowJobForm(false)} className="btn-secondary">
-                        Cancel
-                      </button>
-                    </div>
-                  </form>
-                )}
+                <hr className="modal-divider" />
 
-                {jobs.length === 0 ? (
-                  <p className="empty-state">No jobs posted yet. Create your first job posting!</p>
-                ) : (
-                  <div className="jobs-list">
-                    {jobs.map((job) => (
-                      <div key={job.id} className="job-item">
-                        <div className="job-header">
-                          <div>
-                            <h3>{job.title}</h3>
-                            <p className="job-meta">{job.location} • {job.category}</p>
-                          </div>
-                          <StatusBadge status={job.status} type="job" />
-                        </div>
-                        {job.status === 'REJECTED' && job.rejectionReason && (
-                          <p className="rejection-reason"><strong>Rejection Reason:</strong> {job.rejectionReason}</p>
-                        )}
-                        <div className="job-actions">
-                          <button
-                            onClick={() => loadApplications(job.id)}
-                            className="btn-secondary"
-                          >
-                            {selectedJobId === job.id ? 'Hide' : 'View'} Applications
-                          </button>
-                          <button
-                            onClick={() => navigate(`/jobs/${job.id}`)}
-                            className="btn-secondary"
-                          >
-                            View Job
-                          </button>
-                        </div>
-                        
-                        {/* Applications Section */}
-                        {selectedJobId === job.id && applications[job.id] && (
-                          <div className="applications-section">
-                            <h4>Applications ({applications[job.id].length})</h4>
-                            {applications[job.id].length === 0 ? (
-                              <p className="empty-state">No applications yet</p>
-                            ) : (
-                              <div className="applications-list">
-                                {applications[job.id].map((app) => (
-                                  <div key={app.id} className="application-item">
-                                    <div className="application-header">
-                                      <div>
-                                        <p><strong>{app.jobSeeker?.firstName} {app.jobSeeker?.lastName}</strong></p>
-                                        <p className="application-meta">
-                                          {app.jobSeeker?.email} • Applied: {new Date(app.appliedAt).toLocaleDateString()}
-                                        </p>
-                                      </div>
-                                      <StatusBadge status={app.status} type="application" />
-                                    </div>
-                                    {app.coverLetter && (
-                                      <div className="cover-letter">
-                                        <strong>Cover Letter:</strong>
-                                        <p>{app.coverLetter}</p>
-                                      </div>
-                                    )}
-                                    {app.employerNotes && (
-                                      <p className="employer-notes"><strong>Your Notes:</strong> {app.employerNotes}</p>
-                                    )}
-                                    <div className="application-actions">
-                                      <button
-                                        onClick={() => {
-                                          const notes = prompt('Add notes (optional):');
-                                          handleUpdateApplicationStatus(app.id, 'SHORTLISTED', notes || '');
-                                        }}
-                                        className="btn-success"
-                                        disabled={app.status === 'SHORTLISTED' || app.status === 'HIRED'}
-                                      >
-                                        Shortlist
-                                      </button>
-                                      <button
-                                        onClick={() => {
-                                          const notes = prompt('Rejection reason (optional):');
-                                          handleUpdateApplicationStatus(app.id, 'REJECTED', notes || '');
-                                        }}
-                                        className="btn-danger"
-                                        disabled={app.status === 'REJECTED'}
-                                      >
-                                        Reject
-                                      </button>
-                                      <button
-                                        onClick={() => {
-                                          const notes = prompt('Add notes (optional):');
-                                          handleUpdateApplicationStatus(app.id, 'HIRED', notes || '');
-                                        }}
-                                        className="btn-success"
-                                        disabled={app.status === 'HIRED'}
-                                      >
-                                        Hire
-                                      </button>
-                                    </div>
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    ))}
+                <form onSubmit={handleAppUpdate} className="hazy-form">
+                  <div className="form-group">
+                    <label>Update Status</label>
+                    <select
+                      value={appStatusUpdate.status}
+                      onChange={e => setAppStatusUpdate({ ...appStatusUpdate, status: e.target.value })}
+                      required
+                    >
+                      <option value="SUBMITTED">Submitted</option>
+                      <option value="SHORTLISTED">Shortlisted</option>
+                      <option value="REJECTED">Rejected</option>
+                      <option value="HIRED">Hired</option>
+                    </select>
                   </div>
-                )}
-              </div>
+                  <div className="form-group">
+                    <label>Notes for Candidate</label>
+                    <textarea
+                      rows={3}
+                      value={appStatusUpdate.notes}
+                      onChange={e => setAppStatusUpdate({ ...appStatusUpdate, notes: e.target.value })}
+                      placeholder="Share your thoughts or next steps..."
+                    />
+                  </div>
+                  <button type="submit" className="btn btn-primary auth-btn">Update Application</button>
+                </form>
+              </>
             )}
-          </>
-        )}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

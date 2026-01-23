@@ -1,62 +1,139 @@
-.navbar {
-    background: linear-gradient(90deg, rgba(102, 126, 234, 1) 0%, rgba(86, 64, 160, 1) 100%);
-    color: white;
-    box-shadow: 0 6px 18px rgba(34, 36, 38, 0.08);
-    padding: 0.6rem 0;
+.main-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    padding: 1.5rem 0;
+    transition: all var(--speed-base) var(--ease);
+    border-bottom: 1px solid transparent;
 }
 
-.navbar-container {
-    max-width: 1200px;
-    margin: 0 auto;
+.main-navbar.is-transparent {
+    background: transparent;
+    backdrop-filter: none;
+}
+
+.main-navbar.is-scrolled {
+    padding: 1rem 0;
+    background: var(--glass-bg);
+    backdrop-filter: var(--glass-blur);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-inner {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 20px;
 }
 
 .navbar-logo {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: #fff;
-    text-decoration: none;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.8rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
 }
 
-.navbar-menu {
+.navbar-links {
     display: flex;
-    gap: 20px;
     align-items: center;
+    gap: 3rem;
 }
 
-.navbar-menu a {
-    color: rgba(255, 255, 255, 0.95);
-    text-decoration: none;
-    transition: color 0.15s ease, transform 0.15s ease;
-    padding: 6px 10px;
-    border-radius: 6px;
-}
-
-.navbar-menu a:hover {
-    color: #fff;
-    background: rgba(255, 255, 255, 0.08);
-    transform: translateY(-2px);
-}
-
-.navbar-user {
-    color: rgba(255, 255, 255, 0.95);
+.navbar-link {
     font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--text-dim);
+    position: relative;
 }
 
-.btn-logout {
-    padding: 8px 14px;
-    background: rgba(255, 255, 255, 0.12);
-    color: #fff;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 8px;
+.navbar-link:hover {
+    color: white;
+}
+
+.navbar-link::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary);
+    transition: width 0.3s ease;
+}
+
+.navbar-link:hover::after {
+    width: 100%;
+}
+
+.navbar-user-section {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-left: 1rem;
+}
+
+.user-profile-nav {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50px;
+    border: 1px solid var(--glass-border);
+}
+
+.navbar-user-name {
+    font-size: 0.9rem;
+    font-weight: 500;
+}
+
+.btn-logout-icon {
+    background: transparent;
+    border: none;
+    color: var(--text-dim);
     cursor: pointer;
-    transition: background 0.2s ease, transform 0.12s ease;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: color 0.3s ease;
 }
 
-.btn-logout:hover {
-    background: rgba(255, 255, 255, 0.18);
-    transform: translateY(-2px);
+.btn-logout-icon:hover {
+    color: var(--secondary);
+}
+
+.notif-link {
+    position: relative;
+    font-size: 1.2rem;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    background: var(--secondary);
+    color: white;
+    font-size: 0.65rem;
+    min-width: 18px;
+    height: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 700;
+    border: 2px solid var(--bg-deep);
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+
+@media (max-width: 768px) {
+    .navbar-links {
+        display: none;
+        /* Mobile nav would go here */
+    }
 }

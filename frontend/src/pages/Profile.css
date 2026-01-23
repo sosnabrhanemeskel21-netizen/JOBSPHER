@@ -1,0 +1,87 @@
+.profile-page {
+    background-color: var(--off-white);
+    min-height: 100vh;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 3rem;
+    margin-bottom: 5rem;
+}
+
+.profile-card {
+    padding: 3rem;
+}
+
+.identity-card {
+    padding: 2rem;
+    height: fit-content;
+    text-align: center;
+}
+
+.identity-card label {
+    display: block;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.identity-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+
+.email-meta {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+}
+
+.success-message {
+    background: rgba(40, 167, 69, 0.05);
+    color: #28a745;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-weight: 600;
+    border-color: rgba(40, 167, 69, 0.1);
+}
+
+.resume-upload-section {
+    padding: 2rem;
+    background: rgba(0, 0, 0, 0.02);
+    border-radius: 12px;
+}
+
+.file-input-group {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    margin-top: 1rem;
+}
+
+.view-current-link {
+    font-size: 0.9rem;
+    color: var(--dusty-blue);
+    font-weight: 600;
+    text-decoration: underline;
+}
+
+.form-actions {
+    margin-top: 2rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    padding-top: 2rem;
+}
+
+@media (max-width: 968px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .identity-card {
+        order: -1;
+    }
+}

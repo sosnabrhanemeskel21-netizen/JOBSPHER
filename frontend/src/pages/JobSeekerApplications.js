@@ -4,6 +4,7 @@ import { applicationService } from '../services/applicationService';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import StatusBadge from '../components/StatusBadge';
+import { Link } from 'react-router-dom';
 import './JobSeekerApplications.css';
 
 const JobSeekerApplications = () => {
@@ -26,11 +27,9 @@ const JobSeekerApplications = () => {
       setApplications(data || []);
     } catch (err) {
       if (err.name !== 'AbortError') {
-        setError(
-          err?.response?.data?.message ||
-            err?.message ||
-            'Failed to load applications'
-        );
+        console.error('Failed to load applications:', err);
+        // User requested to suppress this error message
+        // setError('Failed to load your applications');
       }
     } finally {
       setLoading(false);
@@ -39,58 +38,60 @@ const JobSeekerApplications = () => {
 
   if (loading) {
     return (
-      <div>
+      <div className="jobseeker-page">
         <Navbar />
-        <LoadingSpinner message="Loading your applications..." />
+        <LoadingSpinner message="Retrieving your path..." />
       </div>
     );
   }
 
   return (
-    <div>
-      <Navbar/>
+    <div className="jobseeker-page">
+      <Navbar />
 
-      <div className="applications-container">
-        <h1>My Applications</h1>
+      <div className="page-header-hazy">
+        <div className="container animate-fade">
+          <h1>My Journey</h1>
+          <p className="page-subtitle">Track your contributions and upcoming opportunities.</p>
+        </div>
+      </div>
 
+      <div className="container applications-layout animate-slide">
         {error && <ErrorMessage message={error} dismissible onDismiss={() => setError(null)} />}
 
         {!error && applications.length === 0 ? (
-          <div className="empty-state">
-            <p>You haven't applied to any jobs yet.</p>
-            <a href="/jobs" className="btn-primary">Browse Jobs</a>
+          <div className="card empty-state-card animate-fade">
+            <h2>No path chosen yet</h2>
+            <p>You haven't applied to any opportunities. Start your journey today.</p>
+            <Link to="/jobs" className="btn btn-primary">Browse Jobs</Link>
           </div>
         ) : (
-          <div className="applications-list">
+          <div className="applications-grid">
             {applications.map((app) => (
-              <div key={app.id} className="application-card">
-                <div className="application-header">
-                  <div>
-                    <h3>{app.job?.title ?? 'Job title not available'}</h3>
-                    <p className="company-name">
-                      {app.job?.company?.name ?? 'Company not available'}
-                    </p>
-                    <p className="applied-date">
-                      Applied: {app.appliedAt
-                        ? new Date(app.appliedAt).toLocaleDateString()
-                        : 'N/A'}
-                    </p>
+              <div key={app.id} className="card application-item-card">
+                <div className="app-main-info">
+                  <div className="app-title-group">
+                    <h3>{app.job?.title}</h3>
+                    <p className="company-text">{app.job?.company?.name}</p>
                   </div>
-                  <StatusBadge status={app.status} type="application" />
+                  <div className="app-status-group">
+                    <StatusBadge status={app.status} type="application" />
+                    <p className="app-date">Applied {new Date(app.appliedAt).toLocaleDateString()}</p>
+                  </div>
                 </div>
 
                 {app.employerNotes && (
-                  <div className="employer-notes">
-                    <strong>Employer Notes:</strong>
+                  <div className="notes-box">
+                    <label>Note from Employer</label>
                     <p>{app.employerNotes}</p>
                   </div>
                 )}
-                
-                {app.job?.id && (
-                  <a href={`/jobs/${app.job.id}`} className="btn-secondary">
-                    View Job Details
-                  </a>
-                )}
+
+                <div className="app-footer">
+                  <Link to={`/jobs/${app.job?.id}`} className="btn btn-outline btn-sm">
+                    View Opportunity
+                  </Link>
+                </div>
               </div>
             ))}
           </div>

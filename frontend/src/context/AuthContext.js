@@ -50,7 +50,7 @@ export const useAuth = () => {
 export const AuthProvider = ({ children }) => {
   // Current authenticated user (null if not authenticated)
   const [user, setUser] = useState(null);
-  
+
   // Loading state during initial authentication check
   const [loading, setLoading] = useState(true);
 
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     const token = localStorage.getItem('token');
     const savedUser = localStorage.getItem('user');
-    
+
     // If token and user data exist, restore the session
     if (token && savedUser) {
       try {
@@ -75,7 +75,7 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('user');
       }
     }
-    
+
     // Mark loading as complete
     setLoading(false);
   }, []);
@@ -94,11 +94,11 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await authService.login(email, password);
-      
+
       // Store token and user data in localStorage for persistence
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response));
-      
+
       // Update user state
       setUser(response);
       return response;
@@ -120,17 +120,32 @@ export const AuthProvider = ({ children }) => {
   const register = async (userData) => {
     try {
       const response = await authService.register(userData);
-      
+
       // Store token and user data in localStorage for persistence
       localStorage.setItem('token', response.token);
       localStorage.setItem('user', JSON.stringify(response));
-      
+
       // Update user state
       setUser(response);
       return response;
     } catch (error) {
       throw error;
     }
+  };
+
+  /**
+   * Update User function
+   * 
+   * Updates the user data in state and localStorage while preserving the token.
+   * Useful when the user updates their profile.
+   * 
+   * @param {Object} updatedUser - The updated user object
+   */
+  const updateUser = (updatedUser) => {
+    const token = localStorage.getItem('token');
+    const userData = { ...updatedUser, token };
+    localStorage.setItem('user', JSON.stringify(userData));
+    setUser(userData);
   };
 
   /**
@@ -150,6 +165,7 @@ export const AuthProvider = ({ children }) => {
     login,                   // Login function
     register,                // Register function
     logout,                  // Logout function
+    updateUser,              // Update user profile function
     loading,                 // Loading state during authentication check
     isAuthenticated: !!user, // Boolean indicating if user is authenticated
   };

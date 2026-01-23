@@ -5,11 +5,8 @@ export const paymentService = {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('referenceNumber', referenceNumber);
-    const response = await api.post('/payments/upload', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
+    const response = await api.post('/payments/upload', formData);
+
     return response.data;
   },
 

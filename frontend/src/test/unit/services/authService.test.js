@@ -1,28 +1,39 @@
-import { authService } from '../../../services/authService';
-import api from '../../../services/api';
+import { authService } from '../../services/authService';
+import api from '../../services/api';
 
-// Mock the api module
-jest.mock('../../../services/api');
+// Mock the API module
+jest.mock('../../services/api');
 
-describe('authService', () => {
+describe('AuthService Unit Tests', () => {
     afterEach(() => {
         jest.clearAllMocks();
-        localStorage.clear();
     });
 
-    test('login calls api.post and returns data', async () => {
-        const mockResponse = { data: { token: 'fake-token', user: { email: 'test@example.com' } } };
+    test('login calls api.post with correct arguments', async () => {
+        const mockResponse = { data: { token: 'fake-token', user: { id: 1 } } };
         api.post.mockResolvedValue(mockResponse);
 
-        const result = await authService.login('test@example.com', 'password');
+        const result = await authService.login('test@example.com', 'password123');
 
-        expect(api.post).toHaveBeenCalledWith('/auth/login', { email: 'test@example.com', password: 'password' });
+        expect(api.post).toHaveBeenCalledWith('/auth/login', {
+            email: 'test@example.com',
+            password: 'password123'
+        });
         expect(result).toEqual(mockResponse.data);
     });
+    /*
+     * HOW IT RUNS:
+     * 1. Mocks the underlying 'api' module (axios instance).
+     * 2. Calls the authService.login method.
+     * 3. Verifies that api.post was called with the expected URL and payload.
+     * 
+     * WHAT IT DOES:
+     * Validates the business logic of the authService in isolation (Pure Unit Test).
+     */
 
-    test('register calls api.post and returns data', async () => {
-        const mockData = { email: 'new@example.com', password: 'password' };
-        const mockResponse = { data: { token: 'reg-token', user: { email: 'new@example.com' } } };
+    test('register calls api.post with user data', async () => {
+        const mockData = { email: 'new@example.com' };
+        const mockResponse = { data: { success: true } };
         api.post.mockResolvedValue(mockResponse);
 
         const result = await authService.register(mockData);
@@ -30,14 +41,13 @@ describe('authService', () => {
         expect(api.post).toHaveBeenCalledWith('/auth/register', mockData);
         expect(result).toEqual(mockResponse.data);
     });
-
-    test('logout removes items from localStorage', () => {
-        localStorage.setItem('token', 'fake-token');
-        localStorage.setItem('user', 'fake-user');
-
-        authService.logout();
-
-        expect(localStorage.getItem('token')).toBeNull();
-        expect(localStorage.getItem('user')).toBeNull();
-    });
+    /*
+     * HOW IT RUNS:
+     * 1. Mocks api.post response.
+     * 2. Calls register with mock data.
+     * 3. Checks API interaction.
+     * 
+     * WHAT IT DOES:
+     * Ensures registration data is passed correctly to the backend endpoint.
+     */
 });

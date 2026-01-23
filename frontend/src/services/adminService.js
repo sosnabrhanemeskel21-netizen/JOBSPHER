@@ -50,5 +50,10 @@ export const adminService = {
     });
     return response.data;
   },
+
+  getStats: async () => {
+    const response = await api.get('/admin/stats');
+    return response.data;
+  },
 };
 

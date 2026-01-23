@@ -1,59 +1,252 @@
-.employer-dashboard {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
+.employer-page {
+  background: var(--bg-deep);
+  min-height: 100vh;
 }
 
-.employer-dashboard h1 {
-  margin-bottom: 30px;
-  color: #333;
+.employer-layout {
+  padding-bottom: 5rem;
 }
 
-.card {
-  background: white;
-  padding: 30px;
-  border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
+/* Setup Flow */
+.setup-section {
+  margin-bottom: 4rem;
 }
 
-.card h2 {
-  margin-bottom: 20px;
-  color: #333;
+.setup-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
 }
 
-.form-group {
-  margin-bottom: 20px;
+.setup-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 3rem;
+  border: 1px solid var(--glass-border);
 }
 
-.form-group label {
-  display: block;
-  margin-bottom: 5px;
-  color: #555;
-  font-weight: 500;
+.setup-card.active {
+  border-color: var(--primary);
+  background: rgba(99, 102, 241, 0.05);
 }
 
-.form-group input,
-.form-group textarea {
+.setup-card.completed {
+  background: rgba(16, 185, 129, 0.03);
+  border-color: rgba(16, 185, 129, 0.2);
+}
+
+.setup-number {
+  width: 40px;
+  height: 40px;
+  background: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.completed .setup-number {
+  background: #10b981;
+}
+
+.setup-logo-preview {
+  width: 60px;
+  height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--glass-border);
+}
+
+.setup-logo-preview img {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 14px;
-  box-sizing: border-box;
+  height: 100%;
+  object-fit: cover;
 }
 
-.btn-primary {
-  padding: 10px 20px;
-  background: #667eea;
-  color: white;
+/* Dashboard Content */
+.company-detail-card {
+  margin-bottom: 3rem;
+}
+
+.card-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 3rem;
+}
+
+.industry-text {
+  color: var(--primary);
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.header-actions {
+  display: flex;
+  gap: 1rem;
+}
+
+.company-stats {
+  display: flex;
+  gap: 4rem;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 2rem;
+}
+
+.stat-item label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.5rem;
+}
+
+.stat-item p {
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+/* Jobs Section */
+.section-header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.dashboard-job-card {
+  margin-bottom: 2rem;
+}
+
+.job-card-main {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.job-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.job-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--glass-border);
+}
+
+.view-link {
+  color: var(--primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Applications Panel */
+.applications-panel {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px dashed var(--glass-border);
+}
+
+.applications-panel h4 {
+  margin-bottom: 1.5rem;
+}
+
+.apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.app-item-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--glass-border);
+  border-radius: 16px;
+}
+
+.candidate-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin-bottom: 0.25rem;
+}
+
+.app-meta {
+  color: var(--text-dim);
+  font-size: 0.9rem;
+}
+
+.app-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+/* Modals */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(2, 6, 23, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.modal-card {
+  width: 100%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-sub {
+  color: var(--text-dim);
+  margin-bottom: 2rem;
+}
+
+.grid-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+/* Review View */
+.app-details-view {
+  margin-bottom: 2rem;
+}
+
+.detail-row {
+  margin-bottom: 1.5rem;
+}
+
+.detail-row label {
+  display: block;
+  font-size: 0.8rem;
+  color: var(--text-dim);
+  margin-bottom: 0.5rem;
+}
+
+.modal-divider {
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  margin-right: 10px;
+  border-top: 1px solid var(--glass-border);
+  margin: 2rem 0;
 }
-
-.btn-primary:hover {
-  background: #5568d3;
-}
-
