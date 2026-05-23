@@ -2,7 +2,7 @@
 
 A full-stack job board application built with React and Spring Boot, enabling employers to post jobs and job seekers to browse and apply for positions.
 
-## 🎯 Project Overview
+##  Project Overview
 
 JobSpher is a comprehensive job board platform that connects employers and job seekers. The application features role-based access control with three user types: **Admin**, **Employer**, and **Job Seeker**.
 
@@ -40,7 +40,7 @@ JobSpher is a comprehensive job board platform that connects employers and job s
   - Job approval notifications
   - Payment verification notifications
 
-## 🏗️ Architecture
+##  Architecture
 
 ### Tech Stack
 
