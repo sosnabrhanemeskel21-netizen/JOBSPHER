@@ -96,7 +96,7 @@ josphere/
 └── README.md                # This file
 ```
 
-## 🚀 Getting Started
+##  Getting Started
 
 ### Prerequisites
 
@@ -164,7 +164,7 @@ spring.flyway.locations=classpath:db/migration
 spring.flyway.validate-on-migrate=true
 ```
 
-**⚠️ Security Note:** In production, use environment variables for sensitive values like database passwords and JWT secrets.
+** Security Note:** In production, use environment variables for sensitive values like database passwords and JWT secrets.
 
 #### 4. Run Backend
 
@@ -292,7 +292,7 @@ Authorization: Bearer <your-jwt-token>
 - Email: `admin@jobspher.com`
 - Password: `admin123`
 
-⚠️ **Change the default admin password in production!**
+ **Change the default admin password in production!**
 
 ### Employer
 - Register company profile
@@ -320,11 +320,11 @@ Authorization: Bearer <your-jwt-token>
 - Protected endpoints based on user roles
 
 ### Security Best Practices
-- ✅ Passwords are hashed using BCrypt
-- ✅ JWT tokens for stateless authentication
-- ✅ SQL injection protection via JPA/Hibernate
-- ✅ CORS configuration
-- ✅ Input validation using Jakarta Validation
+-  Passwords are hashed using BCrypt
+-  JWT tokens for stateless authentication
+-  SQL injection protection via JPA/Hibernate
+-  CORS configuration
+-  Input validation using Jakarta Validation
 
 ### Production Security Checklist
 - [ ] Change default admin password
@@ -377,7 +377,7 @@ npm test
 
 **Note:** Test coverage is currently minimal. Consider adding comprehensive unit and integration tests.
 
-## 📦 Building for Production
+##  Building for Production
 
 ### Backend
 
@@ -407,7 +407,7 @@ npm run build
 
 The optimized build will be in the `build/` directory.
 
-## 🌍 Environment Variables
+##  Environment Variables
 
 ### Backend Environment Variables
 
@@ -464,7 +464,7 @@ REACT_APP_API_URL=http://localhost:8080/api
 - Clear `node_modules` and reinstall: `rm -rf node_modules && npm install`
 - Clear npm cache: `npm cache clean --force`
 
-## 🤝 Contributing
+## Contributing
 
 1. Fork the repository
 2. Create a feature branch (`git checkout -b feature/amazing-feature`)
@@ -479,7 +479,7 @@ REACT_APP_API_URL=http://localhost:8080/api
 - **Comments:** Add meaningful comments for complex logic
 - **Documentation:** Update README and API documentation for new features
 
-## 📝 License
+##  License
 
 [Add your license here]
 
@@ -487,7 +487,7 @@ REACT_APP_API_URL=http://localhost:8080/api
 
 [Add author information here]
 
-## 🙏 Acknowledgments
+##  Acknowledgments
 
 - Spring Boot framework
 - React library
